@@ -1,0 +1,30 @@
+{
+  "name": "hl7-parser-ts",
+  "version": "0.1.0",
+  "description": "Zero-dependency HL7 v2 parser, query and serializer for TypeScript.",
+  "license": "MIT",
+  "author": "Md. Jamil Hossain",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mdjamilh/hl7-parser-ts.git"
+  },
+  "keywords": [
+    "hl7",
+    "hl7v2",
+    "healthcare",
+    "parser",
+    "mllp",
+    "typescript"
+  ],
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.8",
+    "typescript": "^5.9.3"
+  }
+}
