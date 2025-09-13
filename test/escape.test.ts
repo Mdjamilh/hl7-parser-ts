@@ -8,6 +8,10 @@ describe("readDelimiters", () => {
     expect(readDelimiters("MSH|^~\\&|APP")).toEqual(D);
   });
 
+  it("handles an MSH segment that ends right after the encoding characters", () => {
+    expect(readDelimiters("MSH|^~\&")).toEqual(D);
+  });
+
   it("supports custom delimiters", () => {
     expect(readDelimiters("MSH#$*@%#APP")).toEqual({
       field: "#",

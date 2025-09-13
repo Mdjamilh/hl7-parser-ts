@@ -35,7 +35,9 @@ export function readDelimiters(header: string): Delimiters {
     throw new Hl7ParseError("A message must start with an MSH segment", 1);
   }
   const field = header[3];
-  const encoding = header.slice(4, header.indexOf(field ?? "|", 4));
+  // MSH-2 runs to the next field separator, or to the end when MSH has no further fields.
+  const end = header.indexOf(field ?? "|", 4);
+  const encoding = header.slice(4, end === -1 ? undefined : end);
   if (!field || encoding.length < 4) {
     throw new Hl7ParseError("MSH-1 and MSH-2 must declare the field separator and four encoding characters", 1);
   }
