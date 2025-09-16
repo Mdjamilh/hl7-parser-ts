@@ -152,6 +152,39 @@ export class Hl7Message {
     return { code: this.get("MSH.9.1"), trigger: this.get("MSH.9.2"), structure: this.get("MSH.9.3") };
   }
 
+  /**
+   * Sets a value at a path, growing the field/repetition/component arrays as
+   * needed. Appends the segment if it doesn't exist yet. MSH-1 and MSH-2 are
+   * fixed by the delimiters and can't be set.
+   */
+  set(path: string, value: string): this {
+    const p = parsePath(path);
+    if (p.segment === "MSH" && p.field <= 2) {
+      throw new Hl7ParseError("MSH-1 and MSH-2 are defined by the message delimiters");
+    }
+    const occurrence = p.segmentIndex ?? 1;
+    const existing = this.segmentsNamed(p.segment);
+    let segment = existing[occurrence - 1];
+    if (!segment) {
+      if (occurrence !== existing.length + 1) {
+        throw new Hl7ParseError(`Can't create ${p.segment}[${occurrence}] before ${p.segment}[${existing.length + 1}]`);
+      }
+      segment = { name: p.segment, fields: [[]] };
+      this.segments.push(segment);
+    }
+
+    const grow = <T>(items: T[], index: number, make: () => T) => {
+      while (items.length <= index) items.push(make());
+      return items[index]!;
+    };
+    const field = grow(segment.fields, p.field, () => [[[""]]]);
+    const rep = grow(field, (p.repetition ?? 1) - 1, () => [[""]]);
+    const comp = grow(rep, (p.component ?? 1) - 1, () => [""]);
+    grow(comp, (p.subcomponent ?? 1) - 1, () => "");
+    comp[(p.subcomponent ?? 1) - 1] = value;
+    return this;
+  }
+
   /** MSH-10, the sender's unique id for this message. */
   get controlId() {
     return this.get("MSH.10");
