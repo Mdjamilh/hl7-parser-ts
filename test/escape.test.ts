@@ -9,7 +9,7 @@ describe("readDelimiters", () => {
   });
 
   it("handles an MSH segment that ends right after the encoding characters", () => {
-    expect(readDelimiters("MSH|^~\&")).toEqual(D);
+    expect(readDelimiters("MSH|^~\\&")).toEqual(D);
   });
 
   it("supports custom delimiters", () => {
