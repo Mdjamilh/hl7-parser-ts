@@ -58,7 +58,7 @@ export class Hl7Message {
   /** Parses an HL7 v2 message in pipe-delimited (ER7) form. Accepts \r, \n or \r\n between segments. */
   static parse(text: string): Hl7Message {
     const lines = text
-      .replace(/^﻿/, "")
+      .replace(/^\uFEFF/, "")
       .split(/\r\n|\r|\n/)
       .map((l) => l.trim())
       .filter(Boolean);
