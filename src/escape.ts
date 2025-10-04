@@ -47,7 +47,10 @@ function decodeSequence(code: string, d: Delimiters): string | null {
   }
   if (/^\.(sp|in|ti|ce|fi|nf)/.test(code)) return "";
   if (/^X([0-9A-Fa-f]{2})+$/.test(code)) {
-    const bytes = code.slice(1).match(/../g)!.map((h) => parseInt(h, 16));
+    const bytes = code
+      .slice(1)
+      .match(/../g)!
+      .map((h) => parseInt(h, 16));
     return new TextDecoder().decode(new Uint8Array(bytes));
   }
   return null;

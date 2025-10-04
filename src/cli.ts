@@ -70,7 +70,9 @@ export function run(argv: string[], out = process.stdout, err = process.stderr):
       }
       case "validate": {
         const message = Hl7Message.parse(readInput(rest[0]));
-        out.write(`OK: ${message.type.code ?? "?"}^${message.type.trigger ?? "?"} with ${message.segments.length} segments\n`);
+        out.write(
+          `OK: ${message.type.code ?? "?"}^${message.type.trigger ?? "?"} with ${message.segments.length} segments\n`,
+        );
         return 0;
       }
       default:

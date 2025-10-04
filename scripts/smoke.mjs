@@ -17,16 +17,26 @@ run(npm, ["install", "--silent", path.join(root, tarball)], dir);
 const message = readFileSync(path.join(root, "test/fixtures/adt_a01.hl7"), "utf8");
 writeFileSync(path.join(dir, "msg.hl7"), message);
 
-writeFileSync(path.join(dir, "esm.mjs"), `import { parseMessage } from "hl7-parser-ts";
+writeFileSync(
+  path.join(dir, "esm.mjs"),
+  `import { parseMessage } from "hl7-parser-ts";
 import { readFileSync } from "node:fs";
-console.log(parseMessage(readFileSync("msg.hl7", "utf8")).get("PID.5.1"));`);
-writeFileSync(path.join(dir, "cjs.cjs"), `const { parseMessage } = require("hl7-parser-ts");
-console.log(parseMessage(require("node:fs").readFileSync("msg.hl7", "utf8")).get("PID.5.2"));`);
+console.log(parseMessage(readFileSync("msg.hl7", "utf8")).get("PID.5.1"));`,
+);
+writeFileSync(
+  path.join(dir, "cjs.cjs"),
+  `const { parseMessage } = require("hl7-parser-ts");
+console.log(parseMessage(require("node:fs").readFileSync("msg.hl7", "utf8")).get("PID.5.2"));`,
+);
 
 const checks = [
   ["ESM import", run("node", ["esm.mjs"], dir).trim(), "DOE"],
   ["CommonJS require", run("node", ["cjs.cjs"], dir).trim(), "JANE"],
-  ["hl7 binary", run("node", [path.join(dir, "node_modules/hl7-parser-ts/dist/bin.js"), "validate", "msg.hl7"], dir).trim(), "OK: ADT^A01 with 6 segments"],
+  [
+    "hl7 binary",
+    run("node", [path.join(dir, "node_modules/hl7-parser-ts/dist/bin.js"), "validate", "msg.hl7"], dir).trim(),
+    "OK: ADT^A01 with 6 segments",
+  ],
 ];
 let failed = false;
 for (const [name, actual, expected] of checks) {
@@ -34,5 +44,9 @@ for (const [name, actual, expected] of checks) {
   failed ||= !ok;
   console.log(`${ok ? "pass" : "FAIL"}  ${name}: ${actual}`);
 }
-run(process.platform === "win32" ? "cmd" : "rm", process.platform === "win32" ? ["/c", "del", tarball] : ["-f", tarball], root);
+run(
+  process.platform === "win32" ? "cmd" : "rm",
+  process.platform === "win32" ? ["/c", "del", tarball] : ["-f", tarball],
+  root,
+);
 process.exit(failed ? 1 : 0);

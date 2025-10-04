@@ -12,7 +12,13 @@ describe("toSegmentJson", () => {
     expect(msh?.fields["MSH.9"]).toEqual(["ORU", "R01", "ORU_R01"]);
     expect(pid).toEqual({
       segment: "PID",
-      fields: { "PID.1": "1", "PID.3": ["20007788", "", "", "GOODHEALTH", "MR"], "PID.5": ["SMITH", "ALEX", "J"], "PID.7": "19720705", "PID.8": "M" },
+      fields: {
+        "PID.1": "1",
+        "PID.3": ["20007788", "", "", "GOODHEALTH", "MR"],
+        "PID.5": ["SMITH", "ALEX", "J"],
+        "PID.7": "19720705",
+        "PID.8": "M",
+      },
     });
   });
 });
@@ -29,7 +35,16 @@ describe("summarize", () => {
 
 describe("public API", () => {
   it("exports the documented entry points", () => {
-    for (const name of ["parseMessage", "Hl7Message", "createAck", "MllpDecoder", "frameMessage", "readPatient", "readObservations", "parseHl7DateTime"]) {
+    for (const name of [
+      "parseMessage",
+      "Hl7Message",
+      "createAck",
+      "MllpDecoder",
+      "frameMessage",
+      "readPatient",
+      "readObservations",
+      "parseHl7DateTime",
+    ]) {
       expect(lib).toHaveProperty(name);
     }
   });

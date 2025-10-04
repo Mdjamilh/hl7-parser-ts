@@ -42,7 +42,10 @@ describe("hl7 CLI", () => {
   });
 
   it("reports errors and usage", () => {
-    expect(exec(["ack", "--code", "XX", fixture("adt_a01.hl7")])).toMatchObject({ code: 1, stderr: expect.stringMatching(/AA, AE or AR/) });
+    expect(exec(["ack", "--code", "XX", fixture("adt_a01.hl7")])).toMatchObject({
+      code: 1,
+      stderr: expect.stringMatching(/AA, AE or AR/),
+    });
     expect(exec(["frobnicate"])).toMatchObject({ code: 1, stderr: expect.stringMatching(/Unknown command/) });
     expect(exec([]).code).toBe(1);
     expect(exec(["--help"])).toMatchObject({ code: 0, stdout: expect.stringMatching(/^Usage: hl7/) });

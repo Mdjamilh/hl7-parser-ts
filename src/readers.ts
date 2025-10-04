@@ -67,7 +67,11 @@ export function readPatient(message: Hl7Message): Patient | undefined {
 
   const identifiers = (pid.fields[3] ?? [])
     .map((rep) =>
-      compact({ value: rep[0]?.[0] ?? "", assigningAuthority: rep[3]?.[0] || undefined, type: rep[4]?.[0] || undefined }),
+      compact({
+        value: rep[0]?.[0] ?? "",
+        assigningAuthority: rep[3]?.[0] || undefined,
+        type: rep[4]?.[0] || undefined,
+      }),
     )
     .filter((id) => id.value !== "");
 
