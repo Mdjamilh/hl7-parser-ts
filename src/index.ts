@@ -1,4 +1,6 @@
 export { createAck, type AckCode, type AckOptions } from "./ack.js";
+export { parseBatch } from "./batch.js";
+export { validateMessage, type ValidationIssue } from "./validate.js";
 export { formatHl7DateTime, parseHl7DateTime, type Hl7DateTime, type Hl7Precision } from "./datetime.js";
 export { DEFAULT_DELIMITERS, Hl7ParseError, readDelimiters, type Delimiters } from "./encoding.js";
 export { escapeValue, unescapeValue } from "./escape.js";
