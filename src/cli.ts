@@ -5,6 +5,7 @@ import { createAck, type AckCode } from "./ack.js";
 import { Hl7ParseError } from "./encoding.js";
 import { summarize, toSegmentJson } from "./json.js";
 import { Hl7Message } from "./message.js";
+import { validateMessage } from "./validate.js";
 
 const USAGE = `Usage: hl7 <command> [options] [file]
 
@@ -14,7 +15,7 @@ Commands:
   parse [--summary] [--compact]   Print the message as JSON (segments by position, or a typed summary)
   get <path> [--all]              Print the value at a path, e.g. PID.5.1 or OBX.5 --all
   ack [--code AA|AE|AR] [--text]  Print an acknowledgment for the message
-  validate                        Exit 0 if the message parses, 1 with the error otherwise
+  validate                        Check structure and required header fields; exit 1 on errors
 
 Examples:
   hl7 parse --summary lab-result.hl7
@@ -70,6 +71,9 @@ export function run(argv: string[], out = process.stdout, err = process.stderr):
       }
       case "validate": {
         const message = Hl7Message.parse(readInput(rest[0]));
+        const issues = validateMessage(message);
+        for (const issue of issues) out.write(`${issue.severity.toUpperCase()} ${issue.path}: ${issue.message}\n`);
+        if (issues.some((i) => i.severity === "error")) return 1;
         out.write(
           `OK: ${message.type.code ?? "?"}^${message.type.trigger ?? "?"} with ${message.segments.length} segments\n`,
         );

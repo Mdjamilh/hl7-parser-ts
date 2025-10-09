@@ -41,6 +41,13 @@ describe("hl7 CLI", () => {
     expect(exec(["validate", fixture("oru_r01.hl7")]).stdout).toBe("OK: ORU^R01 with 8 segments\n");
   });
 
+  it("lists validation issues and fails on errors", () => {
+    const result = exec(["validate", fixture("missing_control_id.hl7")]);
+    expect(result.code).toBe(1);
+    expect(result.stdout).toContain("ERROR MSH.10: Message control ID is required");
+    expect(result.stdout).toContain("ERROR MSH.11: Processing ID is required");
+  });
+
   it("reports errors and usage", () => {
     expect(exec(["ack", "--code", "XX", fixture("adt_a01.hl7")])).toMatchObject({
       code: 1,
